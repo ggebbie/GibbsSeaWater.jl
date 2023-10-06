@@ -752,6 +752,9 @@ function gsw_z_from_p(p, lat, geo_strf_dyn_height, sea_surface_geopotential)
     ccall((:gsw_z_from_p, libgswteos), Cdouble, (Cdouble, Cdouble, Cdouble, Cdouble), p, lat, geo_strf_dyn_height, sea_surface_geopotential)
 end
 
+# credit: b-r-hamilton
+gsw_z_from_p(p, lat) = ccall((:gsw_z_from_p, libgswteos), Cdouble, (Cdouble, Cdouble), p, lat) 
+
 function gsw_p_from_z(z, lat, geo_strf_dyn_height, sea_surface_geopotential)
     ccall((:gsw_p_from_z, libgswteos), Cdouble, (Cdouble, Cdouble, Cdouble, Cdouble), z, lat, geo_strf_dyn_height, sea_surface_geopotential)
 end
