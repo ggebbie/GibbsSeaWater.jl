@@ -300,14 +300,17 @@ function gsw_ipv_vs_fnsquared_ratio(sa, ct, p, p_ref, nz, ipv_vs_fnsquared_ratio
     ccall((:gsw_ipv_vs_fnsquared_ratio, libgswteos), Cvoid, (Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Cdouble, Cint, Ptr{Cdouble}, Ptr{Cdouble}), sa, ct, p, p_ref, nz, ipv_vs_fnsquared_ratio, p_mid)
 end
 
-# ggebbie: add this based on manual: doesn't pass test.
-# function gsw_isochoric_heat_cap_t_exact(sa,t,p)
-#     # cp * k /kt
-#     cp = gsw_cp_t_exact(sa,t,p)
-#     k = gsw_kappa_t_exact(sa,t,p)
-#     kt = gsw_kappa(sa,gsw_ct_from_t(sa,t,p),p)
-#     return cv = cp*k/kt
-# end
+function gsw_isochoric_heat_cap_t_exact(SA,t,p)
+    n0 = 0; 
+    n1 = 1; 
+    n2 = 2;
+
+    g_tt = gsw_gibbs(n0,n2,n0,SA,t,p); 
+    g_tp = gsw_gibbs(n0,n1,n1,SA,t,p);
+    g_pp = gsw_gibbs(n0,n0,n2,SA,t,p);
+
+    return -(273.15 + t).*(g_tt - g_tp.*g_tp./g_pp);
+end
 
 function gsw_kappa_const_t_ice(t, p)
     ccall((:gsw_kappa_const_t_ice, libgswteos), Cdouble, (Cdouble, Cdouble), t, p)
